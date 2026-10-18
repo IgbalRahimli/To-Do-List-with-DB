@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Igbal RAHIMLI">
+  <title>To-Do Task Form</title>
+
+<style>
+:root{
+    --bg:#f6f3fb;
+    --panel:#ffffff;
+    --purple-100:#f0e7ff;
+    --purple-300:#c9b7ff;
+    --purple-500:#7f3ff2;
+    --purple-700:#5a1db3;
+    --muted:#7b6f88;
+}
+
+html,body{
+    padding:0;
+    margin:0;
+    background:var(--bg);
+    width:100%;
+    min-height:100vh;
+    font-family:calibri, sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+}
+
+main{
+    width:95%;
+    max-width:600px;
+    background:var(--panel);
+    border:1px solid #e7ddff;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(107,63,232,0.08);
+    margin-top:20px;
+    overflow:hidden;
+}
+
+header,section,article,aside,footer{
+    padding:14px 16px;
+    border-bottom:1px solid #efe8ff;
+    background:white;
+}
+
+h1{
+    margin:0 0 12px 0;
+    font-size:1.7rem;
+    text-align:center;
+    font-weight:bold;
+    color:var(--purple-700);
+    text-decoration:none;
+}
+
+label{
+    font-weight:bold;
+    color:var(--purple-700);
+}
+
+input,textarea,select{
+    margin-top:6px;
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #d9ceff;
+    font-size:1rem;
+    box-sizing:border-box;
+    background:#faf7ff;
+    color:#3c2f4f;
+}
+
+input:focus,textarea:focus,select:focus{
+    outline:none;
+    border-color:var(--purple-500);
+}
+
+button{
+    width:100%;
+    padding:10px;
+    background:var(--purple-500);
+    border:none;
+    border-radius:8px;
+    font-size:1rem;
+    color:white;
+    cursor:pointer;
+}
+
+a{
+    color:var(--purple-700);
+    font-weight:bold;
+    text-decoration:none;
+}
+
+
+footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:0.9rem;
+    background:#faf7ff;
+}
+</style>
+
+  <script>
+    let priorities=[   
+    {"idPriority":"1","priority":"VERY HIGH"},
+    {"idPriority":"2","priority":"High"},
+    {"idPriority":"3","priority":"Medium"},
+    {"idPriority":"4","priority":"Low"},
+    {"idPriority":"5","priority":"very low"}];
+
+    let status = [
+    {"idStatus":"1","status":"Not started :)"},
+    {"idStatus":"2","status":"Working in it ..."},
+    {"idStatus":"3","status":"Finished (Finally)"},
+    {"idStatus":"4","status":"Canceled X_X"}];
+
+
+    let types = [
+    {"idType":"1","type":"Own personal stuff"},
+    {"idType":"2","type":"Buying things"},
+    {"idType":"3","type":"Study and work"},
+    {"idType":"4","type":"Preparing meal"},
+    {"idType":"5","type":"Other things"}];
+    
+
+    function saveTask(){
+      let name=document.getElementById("taskName").value;
+      let desc=document.getElementById("taskDesc").value;
+      let date=document.getElementById("taskDate").value;
+      let idPriority=document.getElementById("idPriority").value;
+      let idType=document.getElementById("idType").value;
+      let idStatus=document.getElementById("idStatus").value;
+
+      if(!document.getElementById("taskForm").checkValidity()){
+          document.getElementById("taskForm").reportValidity();
+          return;
+      }
+      let tasks=[];
+      if(localStorage.getItem("tasks")){
+          tasks=JSON.parse(localStorage.getItem("tasks"));  }
+
+      let newTask={
+          id:tasks.length+1,
+          name:name,
+          description:desc,
+          dueDate:date,
+          idPriority:idPriority,
+          idType:idType,
+          idStatus:idStatus};
+
+      console.log("New Task:",newTask);
+
+
+      tasks.push(newTask);
+
+      console.log("Task List:",tasks);
+
+      localStorage.setItem("tasks",JSON.stringify(tasks));
+
+      document.getElementById("taskForm").reset();
+
+      }
+  </script>
+</head>
+<body>
+
+<main>
+<form id="taskForm">
+
+<header>
+<h1>To-Do List</h1>
+<label>Name:<br>
+<input id="taskName" type="text" required></label>
+</header>
+
+<section>
+<label>Description:<br>
+<textarea id="taskDesc" rows="3"></textarea></label>
+</section>
+
+<article>
+<label>Due Date:<br>
+<input id="taskDate" type="date" required></label>
+</article>
+
+<aside>
+<label>Priority 
+<select id="idPriority" required>
+<option value="">-- Choose--</option></select><br>
+
+<script>
+priorities.forEach(function(item){
+  let theOption=`<option value="${item.idPriority}">${item.priority}</option>`;
+  document.getElementById("idPriority").insertAdjacentHTML("beforeend",theOption);
+});
+</script>
+</label>
+</aside>
+
+<aside>
+<label>Type 
+<select id="idType" required>
+<option value="">-- Choose--</option></select><br>
+
+<script>
+types.forEach(function(item){
+  let theOption=`<option value="${item.idType}">${item.type}</option>`;
+  document.getElementById("idType").insertAdjacentHTML("beforeend",theOption);
+});
+</script>
+</label>
+</aside>
+
+<aside>
+<label>Status 
+<select id="idStatus" required>
+<option value="">-- Choose--</option></select><br>
+
+<script>
+status.forEach(function(item){
+  let theOption=`<option value="${item.idStatus}">${item.status}</option>`;
+  document.getElementById("idStatus").insertAdjacentHTML("beforeend",theOption);
+});
+</script>
+</label>
+</aside>
+
+<section>
+<button type="button" onclick="saveTask()">Save</button>
+</section>
+
+<section style="text-align:center;">
+  <a href="https://igbal.alwaysdata.net/project/tasktable/">View Saved Tasks</a>
+</section>
+
+
+<footer>Created by Igbal RAHIMLI · © 2025</footer>
+
+</form>
+</main>
+
+</body>
+</html>
